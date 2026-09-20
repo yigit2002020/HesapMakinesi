@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Özel Hesap Makinesi</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+        .calculator {
+            background-color: #2e2e42;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            width: 280px;
+        }
+        .display {
+            background-color: #1a1a24;
+            color: #00ffcc;
+            font-size: 2rem;
+            padding: 15px;
+            text-align: right;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            min-height: 40px;
+        }
+        .btn-code {
+            width: 100%;
+            background-color: #ffaa00;
+            color: #000;
+            border: none;
+            padding: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+        .btn-code:hover {
+            background-color: #ffbb33;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button.calc-btn {
+            background-color: #3b3b54;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1.2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button.calc-btn:hover {
+            background-color: #4f4f70;
+        }
+        button.operator {
+            background-color: #6200ee;
+        }
+        button.operator:hover {
+            background-color: #7c4dff;
+        }
+        button.equals {
+            background-color: #03dac6;
+            color: #000;
+            grid-column: span 2;
+        }
+        button.equals:hover {
+            background-color: #66fffa;
+        }
+        button.clear {
+            background-color: #cf6679;
+        }
+        button.clear:hover {
+            background-color: #ff8598;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <button class="btn-code" onclick="askCode()">Kodu Yaz</button>
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <button class="calc-btn clear" onclick="clearDisplay()">C</button>
+            <button class="calc-btn operator" onclick="appendOperator('/')">/</button>
+            <button class="calc-btn operator" onclick="appendOperator('*')">×</button>
+            <button class="calc-btn operator" onclick="appendOperator('-')">-</button>
+            
+            <button class="calc-btn" onclick="appendNumber('7')">7</button>
+            <button class="calc-btn" onclick="appendNumber('8')">8</button>
+            <button class="calc-btn" onclick="appendNumber('9')">9</button>
+            <button class="calc-btn operator" onclick="appendOperator('+')">+</button>
+            
+            <button class="calc-btn" onclick="appendNumber('4')">4</button>
+            <button class="calc-btn" onclick="appendNumber('5')">5</button>
+            <button class="calc-btn" onclick="appendNumber('6')">6</button>
+            <button class="calc-btn equals" onclick="calculate()">=</button>
+            
+            <button class="calc-btn" onclick="appendNumber('1')">1</button>
+            <button class="calc-btn" onclick="appendNumber('2')">2</button>
+            <button class="calc-btn" onclick="appendNumber('3')">3</button>
+            <button class="calc-btn" onclick="appendNumber('0')">0</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentInput = '';
+        let secretCodeActive = false;
+
+        function askCode() {
+            let code = prompt("Özel kodu girin:");
+            if (code === "67") {
+                secretCodeActive = true;
+                alert("Gizli kod aktif! Hesap makinesine 67 yaz ve işlemini yap.");
+            } else {
+                alert("Yanlış kod!");
+                secretCodeActive = false;
+            }
+        }
+
+        function appendNumber(num) {
+            if (currentInput === '0') {
+                currentInput = num;
+            } else {
+                currentInput += num;
+            }
+            updateDisplay();
+            checkSecretTrigger();
+        }
+
+        function appendOperator(op) {
+            currentInput += ' ' + op + ' ';
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '';
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            display.innerText = currentInput === '' ? '0' : currentInput;
+        }
+
+        function checkSecretTrigger() {
+            // Eğer "Kodu Yaz" ile 67 aktif edildiyse ve ekranda 67 yazıyorsa
+            if (secretCodeActive && currentInput.trim() === '67') {
+                setTimeout(() => {
+                    window.location.href = "https://poki.com";
+                }, 500); // Yarım saniye bekleyip yönlendirir
+            }
+        }
+
+        function calculate() {
+            try {
+                // Eğer hesaplama sonucunda 67 çıkarsa veya ekranda 67 varsa yine yönlendir
+                if (secretCodeActive && currentInput.trim() === '67') {
+                    window.location.href = "https://poki.com";
+                    return;
+                }
+                currentInput = eval(currentInput).toString();
+                updateDisplay();
+            } catch (error) {
+                display.innerText = 'Hata';
+                currentInput = '';
+            }
+        }
+    </script>
+
+</body>
+</html>
